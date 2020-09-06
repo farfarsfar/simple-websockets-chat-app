@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-# qasa-chat-app
+# simple-websockets-chat-app
 
 ## What is this?
 
