@@ -6,10 +6,13 @@
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.3.2",
     "@testing-library/user-event": "7.1.2",
+    "@theme-ui/presets": "0.3.0",
     "ky": "0.23.0",
+    "random-username-generator": "1.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-scripts": "3.4.3",
+    "theme-ui": "0.3.1",
     "ws": "7.3.1"
   },
   "devDependencies": {
@@ -23,8 +26,8 @@
   },
   "scripts": {
     "start": "npm-run-all -p start-server start-client",
-    "start-server": "nodemon --exec babel-node ./src/server.js",
-    "start-client": "react-scripts start",
+    "start-server": "nodemon --watch ./src/server.js --exec babel-node ./src/server.js",
+    "start-client": "PORT=8000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

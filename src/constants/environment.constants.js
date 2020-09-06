@@ -1,4 +1,5 @@
+export const SERVER_PORT = 8080;
 export const HOST =
   process.env.NODE_ENV === "production"
     ? window.location.host
-    : "localhost:8080";
+    : `localhost:${SERVER_PORT}`;

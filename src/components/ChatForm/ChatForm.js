@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Box, Flex, Button } from "theme-ui";
 
 const ChatForm = ({ onSubmit, disabled }) => {
   const [inputValue, setInputValue] = useState("");
@@ -10,10 +11,20 @@ const ChatForm = ({ onSubmit, disabled }) => {
     setInputValue("");
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <input onChange={handleInputChange} value={inputValue}></input>
-      <button disabled={disabled || !inputValue}>send</button>
-    </form>
+    <Flex as={"form"} onSubmit={handleSubmit} sx={{ flex: 1 }}>
+      <Box
+        as={"input"}
+        onChange={handleInputChange}
+        value={inputValue}
+        sx={{ flex: 1, fontSize: 20 }}
+      />
+      <Button
+        disabled={disabled || !inputValue}
+        sx={{ ml: 2, cursor: "pointer" }}
+      >
+        send
+      </Button>
+    </Flex>
   );
 };
 

@@ -1,20 +1,26 @@
 import React from "react";
+import { Box, Flex } from "theme-ui";
 
-const Message = ({ text, time }) => (
-  <li>
-    <header>{time}</header>
-    <p>{text}</p>
-  </li>
+import { Message } from "components";
+
+const MessageList = ({ messages, currentUser }) => (
+  <Flex
+    as={"ul"}
+    sx={{ listStyle: "none", padding: 0, flexDirection: "column" }}
+  >
+    {messages.map((message, i) => {
+      const isCurrentUser = message.author === currentUser;
+      return (
+        <Box mb={3} key={i}>
+          <Message
+            {...message}
+            shouldShowTime={i === 0 || message.time !== messages[i - 1].time}
+            isCurrentUser={isCurrentUser}
+          />
+        </Box>
+      );
+    })}
+  </Flex>
 );
-
-const MessageList = ({ messages }) => {
-  return (
-    <ul>
-      {messages.map((message, i) => (
-        <Message {...message} key={i} />
-      ))}
-    </ul>
-  );
-};
 
 export default MessageList;

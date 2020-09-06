@@ -1,50 +1,48 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
+import { Box, Flex } from "theme-ui";
+import randomUser from "random-username-generator";
 
 import { CHAT } from "constants/api-endpoints.constants";
 import { HOST } from "constants/environment.constants";
-import { MessageList, ChatForm } from "components";
+import { MessageList, ChatForm, ReadyStateIndicator } from "components";
+import { useWebsocketChat } from "hooks";
 
 function App() {
-  const ws = useRef(null);
-  const [wsReadyState, setWsReadyState] = useState(ws.readyState);
-  const [messages, setMessages] = useState([]);
+  const userName = useRef(randomUser.generate());
 
-  useEffect(() => {
-    ws.current = new WebSocket(`ws://${HOST}/${CHAT}`);
-    ws.current.onopen = () => {
-      setWsReadyState(ws.current.readyState);
-    };
-    ws.current.onmessage = ({ data }) =>
-      setMessages((messages) => [...messages, JSON.parse(data)]);
-    ws.current.onclose = () => {
-      setWsReadyState(ws.current.readyState);
-    };
-    return () => {
-      ws.current.close();
-    };
-  }, [ws]);
-
-  const handleSendMessage = (text) => {
-    ws.current.send(
-      JSON.stringify({
-        text,
-        time: new Date().toLocaleTimeString(),
-      })
-    );
-  };
+  const { status, sendMessage, messages, numberOfClients } = useWebsocketChat(
+    `ws://${HOST}/${CHAT}`,
+    userName.current
+  );
   return (
-    <>
-      <div
-        style={{
-          width: 10,
-          height: 10,
-          borderRadius: 100,
-          backgroundColor: wsReadyState !== 1 ? "red" : "green",
-        }}
-      />
-      <MessageList messages={messages} />
-      <ChatForm onSubmit={handleSendMessage} disabled={wsReadyState !== 1} />
-    </>
+    <Flex
+      sx={{
+        padding: 3,
+        paddingBottom: 4,
+        height: "100vh",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        margin: "0 auto",
+        width: ["100%", null, "50%"],
+      }}
+    >
+      <MessageList messages={messages} currentUser={userName.current} />
+      <Box sx={{ marginTop: "auto" }}>
+        <Box mb={2}>
+          <ChatForm onSubmit={sendMessage} disabled={!status.ready} />
+        </Box>
+        <Flex sx={{ justifyContent: "space-between" }}>
+          <ReadyStateIndicator
+            ready={status.ready}
+            connecting={status.connecting}
+            closed={status.closed}
+          />
+          {numberOfClients > 0 ? (
+            <Box>{numberOfClients} connected users</Box>
+          ) : null}
+        </Flex>
+      </Box>
+    </Flex>
   );
 }
 
